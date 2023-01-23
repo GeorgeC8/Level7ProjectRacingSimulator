@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html
+        {
+            background-color:lightsteelblue;
+        }
+
+        
+
+        #lengthform
+        {
+            margin-left:445px;
+            width: 200px;
+            height: 50px;
+            background-color: transparent;
+            border: solid 8px red;
+            border-radius: 10px;
+        }
+
+        #carform
+         {
+            margin-left:445px;
+            width: 200px;
+            height: 50px;
+            background-color: transparent;
+            border: solid 8px red;
+            border-radius: 10px;
+            
+        }
+
+        #carform textarea{
+        resize:none;
+        font-size: 16px;
+        outline:none;
+        background-color:transparent;
+        resize: none;
+        border:none;
+        }
+
+        #lengthform input
+        {
+            resize:none;
+        font-size: 16px;
+        outline:none;
+        background-color:transparent;
+        resize: none;
+        border:none; 
+        }
+        
+
+        button
+        {
+             border:solid red 4px;
+             color:red;
+            border-radius:10px; 
+            background-color:lightsteelblue;
+            transition: all 0.2s ease-in-out;
+ 
+        }
+
+        button:hover
+        {
+            background-color: lightblue;
+            cursor: pointer;
+        }
+        #events
+        {
+            display:flex;
+            flex-direction: row;
+            border: 10px solid red;
+            /* text-align:center; */
+            align-items:center;
+            width: 25%;
+            margin: 0 auto;
+            border-radius:25px;
+            padding-top: 10px;
+            /* padding-right: 15px; */
+            padding-bottom: 20px;
+            padding-left: 349px;
+        }
+        #context
+        {
+            border: 10px solid red;
+            text-align:center;
+            width: 75%;
+            margin: 0 auto;
+            border-radius:25px;
+        }
+
+        #title
+        {
+            text-align:center;
+        }
+        .t
+        {
+            color:red;
+        }
+        #times
+        {
+            text-align:center;
+        }
+
+        /* #events span {
+             text-align: center;
+        } */
+
+        #results{
+            margin-left:625px;
+            color:red;
+        }
+    </style>
+    <title>Racing Simulator</title>
+    <script>
+        const TIMER_OFF = -1;
+        
+        function initialize()
+        {
+            carsOut = document.getElementById("cars");
+            carObject = document.getElementById('carform');
+            lengthObject = document.getElementById("lengthform")
+            timerOut = document.getElementById('time');
+            eventsOut = document.getElementById('events');
+            resultsOut = document.getElementById('results');
+
+            namesOut = document.getElementById('names');
+            distOut = document.getElementById('distances');
+
+            carList = [];
+            carObjList = [];
+
+            length = 0;
+
+            counter = 0;
+
+            counterTimer = TIMER_OFF;
+            counterTimer2 = TIMER_OFF;
+
+            raceGoing = false;
+
+        }
+
+        function count()
+        {
+            counter++;
+            display();
+        }
+
+        function simulate()
+        {
+            for(var i =0; i<carObjList.length;i++)
+            {
+                carObjList[i].distance +=Math.floor(Math.random() * 10) + 1;
+                display();
+                if(carObjList[i].distance>=length)
+                {
+                    
+                clearInterval(counterTimer);
+                counterTimer=TIMER_OFF;
+                clearInterval(counterTimer2);
+                counterTimer2 = TIMER_OFF;
+                resultsOut.innerHTML+="The Winner Is: " + carObjList[i].name;
+                break;
+                }
+                // carObjList[i]
+                
+            }
+            
+            
+        }
+
+        function startRace()
+        {
+            raceGoing = true;
+            for(var i =0; i<carList.length;i++)
+            {
+                carObjList.push({});
+            }
+
+            for(var i =0; i<carList.length;i++)
+            {
+                carObjList[i].name=carList[i];
+                namesOut.innerHTML = '';
+               
+                carObjList[i].distance=0;
+                carObjList[i].distDisplay = document.createElement("span");
+                carObjList[i].distDisplay.innerHTML=''+0;
+                distOut.appendChild(carObjList[i].distDisplay);
+                
+            }
+
+            for(var i =0; i<carList.length;i++)
+            {
+                namesOut.innerHTML +=carObjList[i].name + ": <br>";
+
+                
+            }
+
+
+            
+            if(counterTimer==TIMER_OFF)
+            {
+                counterTimer = setInterval(count, 1000);
+            }
+
+            
+            if(counterTimer2 ==TIMER_OFF)
+            {
+                counterTimer2 = setInterval(simulate, 100);
+            }
+           
+            
+        }
+
+        function addCar(name)
+        {
+            if(name==='')return
+            
+            carList.push(name);
+            carObject.carInput.value ='';
+            display();
+        }  
+
+        function setLength(dist)
+        {
+            if(dist ==0) return;
+            else{length = dist;}
+            lengthObject.lengthinput.value='';
+        }
+        
+
+        function display()
+        {
+            carsOut.innerHTML='';
+            for(var i =0; i<carList.length;i++)
+            {
+                carsOut.innerHTML+="Driver of car " + (i+1) + ": " + carList[i]+ "<br>";
+            }
+
+             for(var i =0; i<carObjList.length;i++)
+             {
+                //  eventsOut.innerHTML+= carObjList[i].name + ": " + carObjList[i].distance + " Meters <br>";
+                carObjList[i].distDisplay.innerHTML = " "+carObjList[i].distance+ "<br>";
+             }
+
+            timerOut.innerHTML = counter;
+        }
+
+        
+
+    </script>
+</head>
+<body onload="initialize();">
+    <h1 id='title'class ='t'>Racing Simulator</h1>
+    
+    <div id = 'context'>
+        
+    <h2 class="t">Write Driver Names Here:</h2>
+    
+    <form id ='carform'>
+        <textarea name = 'carInput'></textarea>
+    </form>
+    <br>
+    <button onclick = 'addCar(carObject.carInput.value);'><h2>Add The Car</h2></button>
+    <br>
+    <h2 class ='t'>How Many Meters Should the race be?</h2>
+    
+    <form id = 'lengthform'>
+        <input type = 'number' name = 'lengthinput' />
+    </form>
+    <br>
+    <button onclick = 'setLength(lengthObject.lengthinput.value)'><h2>Set The Length Of The Race</h2></button>
+    <br>
+
+    
+
+    <h2><div class ='t'id = "cars"></div></h2>
+    <br>
+    <button onclick ='startRace();'><h2>Start The Race!</h2></button>
+    <br>
+    <br>
+</div>
+    
+
+<div id ='times'><h2 class ='t'>Timer: <span class = 't'id ='time'></span></h2></div>
+
+    <h2><div class="t" id = 'events'>
+        <br>
+        
+        <div id ='names'>
+
+        </div>
+
+        <div id ='distances'>
+
+        </div>
+    </div></h2>
+    <h1><em><div id = 'results'>
+
+    </div>
+    </em>
+    </h1>
+</body>
+</html>
